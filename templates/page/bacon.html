@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if session.username %}
+<p>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lacinia sapien in turpis posuere tempus. Nam tincidunt ex quis ex ultrices luctus. Maecenas eleifend lectus vel mi sollicitudin blandit in sit amet dolor. Suspendisse dapibus, quam in tincidunt lacinia, quam turpis viverra elit, nec lacinia erat nibh ut est. Maecenas congue quam lobortis elementum iaculis. Cras mauris sapien, ornare et blandit non, dignissim vel ligula. Sed vel ligula odio.
+</p>
+
+<p>
+Mauris laoreet pellentesque tincidunt. Donec id enim leo. Maecenas condimentum bibendum ipsum, vitae laoreet nunc vulputate eget. Nam turpis ligula, egestas id hendrerit id, vestibulum ut sem. Phasellus pellentesque arcu lectus, in vulputate neque hendrerit eget. Pellentesque est lorem, aliquet vel lacus sed, mattis pretium sem. Cras mattis ipsum nisl, nec aliquam metus consequat fermentum. Duis at maximus ligula. Praesent ultricies sed ex eu efficitur.
+</p>
+{% else %}
+
+Please login or register.
+
+{% endif %}
+{% endblock %}

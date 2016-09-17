@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if not session.username %}
+<form method="POST" action="?" id="loginForm">
+    Username: <input type="text" name="username" autocomplete="username">
+    Password: <input type="password" name="password" autocomplete="current-password">
+    <input type="submit" value="Login!" />
+</form>
+<!-- XXX save the creds -->
+<p><a href="/register">Register</a></p>
+{% else %}
+<p>Already logged in as {{ session.username }}</p>
+<div>
+  <a href="/logout">Logout</a>
+</div>
+{% endif %}
+{% endblock %}

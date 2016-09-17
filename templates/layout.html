@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+{% if not session.username %}
+<div id="autosignin">
+  <script>
+    if (navigator.credentials) {
+      return navigator.credentials.get({password: true})
+        .then(function(creds) {
+          var form = new FormData();
+          // XXX CSRF stuff
+          var formData = {};
+          return fetch('/login', {
+            method: 'POST',
+            body: creds
+          });
+        });
+  </script>
+</div>
+{% endif %}
+<div class=page>
+  <div id="toolbar">
+    {% if session.username %}
+      <span>Logged in as {{ session.username }}</span>
+      {% if session.is_subscribed %}
+      {% else %}
+        <span><a href="/subscribe">Subscribe</a></span>
+      {% endif %}
+      <span><a href="/logout">Logout</a></span>
+    {% else %}
+      <span><a href="/login">Login</a></span>
+    {% endif %}
+    </div>
+  </div>
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  <div id="content">
+  {% block body %}
+  {% endblock %}
+  </div>
+</div>
+</body>
+</html>

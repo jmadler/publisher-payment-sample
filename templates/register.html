@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+{% if not session.username %}
+<div>
+  <form method="POST" action="?" id="registerForm">
+    <h2>Account Information</h2>
+      <div><label for="email">Email Address</label> <input type="email" name="email" autocomplete="email" required></input></div>
+      <div><label for="username">Username</label> <input type="text" name="username" autocomplete="username" required></input></div>
+      <div><label for="password">Password</label> <input type="password" name="password" autocomplete="new-password" required></input></div>
+      <div><label for="password-confirm">Confirm Password</label> <input type="password" name="password-confirm" autocomplete="new-password" required></input></div>
+    <button id="registerButton" type="submit" value="Submit">Register!</button>
+  </form>
+</div>
+{% else %}
+<p>No need to register!  You're already logged in as {{ session.username }}</p>
+<div>
+  <a href="/logout">Logout</a>
+</div>
+{% endif %}
+{% endblock %}

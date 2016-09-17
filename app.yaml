@@ -1,0 +1,8 @@
+runtime: python27
+api_version: 1
+version: 1
+application: 'publisher-payment-sample'
+threadsafe: yes
+handlers:
+- url: .* 
+  script: main.app
