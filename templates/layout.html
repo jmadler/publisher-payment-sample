@@ -5,29 +5,18 @@
   <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
-
 </head>
 <body>
-{% if not session.username %}
-<div id="autosignin">
-  <script>
-    if (navigator.credentials) {
-      return navigator.credentials.get({password: true})
-        .then(function(creds) {
-          var form = new FormData();
-          // XXX CSRF stuff
-          var formData = {};
-          return fetch('/login', {
-            method: 'POST',
-            body: creds
-          });
-        });
-  </script>
-</div>
+{% if clear_session %}
+<!-- let's avoid auto-userlogin if they've logged out -->
+<script>
+  if (navigator.credentials) {
+    navigator.credentials.requireUserMediation();
+  }
+</script>
 {% endif %}
-<div class=page>
+<div class="page">
   <div id="toolbar">
     {% if session.username %}
       <span>Logged in as {{ session.username }}</span>
@@ -37,13 +26,78 @@
       {% endif %}
       <span><a href="/logout">Logout</a></span>
     {% else %}
-      <span><a href="/login">Login</a></span>
+      <button id="loginButton">Login</button>
+      <script>
+        if (navigator.credentials) {
+          function handle_login (credentials) {
+            if (!credentials) {
+              // XXX
+              debugger
+            }
+            var form = new FormData(document.getElementById('loginForm'));
+            credentials.additionalData = form;
+            // XXX CSRF stuff
+            //debugger
+            return fetch('/login?type=json', {
+              method: 'POST',
+              credentials: credentials
+            }).then(function(response) {
+              // If the response is good, we should update the UI and let the user know we've automatically logged them in.
+              // Let's let the user know 
+              // If the creds are bad, let's pass through to the login form so they can resolve any issues
+              response.json().then(function(json) {
+                if (json.success) {
+                  // Woohoo!  We're logged in.
+                  // XXX
+                } else {
+                  // It wasn't successful, so let's flash the messages
+                  var messageContainer = document.getElementById('messages');
+                  json.messages.map(function(message) {
+                    var msg = document.createElement('div');
+                    msg.class = 'flash';
+                    msg.innerHTML = message;
+                    messageContainer.appendChild(msg);
+                  });
+                }
+              });
+            });
+          }
+          document.getElementById('loginButton').addEventListener('click', function() { navigator.credentials.get({password: true}).then(handle_login) });
+          navigator.credentials.get({password: true, unmediated: true}).then(handle_login);
+        } else {
+          document.getElementById('loginButton').addEventListener('click', function() {
+            // If we don't have the, let's instantiate a modal dialog for the
+            // login flow.  The form is alreacy on-page as the hidden
+            // "loginForm", so we just need to create a modal and bring into
+            // view.
+            var loginDialogBackground = document.getElementById('loginDialogBackground');
+            loginDialogBackground.style.display = 'block';
+            window.onclick = function(event) {
+              if (event.target == loginDialogBackground) {
+                loginDialogBackground.style.display = 'none';
+              }
+            }
+          });
+        }
+      </script>
+      <div class="modalBackground" id="loginDialogBackground">
+        <div class="modalForeground" id="loginDialogForeground">
+          <form method="POST" action="/login" id="loginForm">
+              <label for="username">Username:</label> <input type="text" name="username" autocomplete="username">
+              <label for="password">Password:</label> <input type="password" name="password" autocomplete="current-password">
+              <input type="submit" value="Login!" />
+          </form>
+        </div>
+      </div>
+      <a href="/register">Register</a>
     {% endif %}
     </div>
   </div>
-  {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-  {% endfor %}
+  <div id="messages">
+    {% for message in get_flashed_messages() %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+  </div>
   <div id="content">
   {% block body %}
   {% endblock %}

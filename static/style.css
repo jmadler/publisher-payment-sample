@@ -1,4 +1,4 @@
-.flash {
+div.flash {
   background-color: yellow;
   padding: 0.5em;
 }
@@ -8,3 +8,27 @@
   width: 100%;
   height: 2em;
 }
+
+div.modalBackground {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(220, 220, 220, 0.6);
+  left: 0;
+  top: 0;
+}
+
+div.modalForeground {
+  position: relative;
+  background-color: white;
+  color: black;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid black;
+  width: 75%;
+  display: block;
+}
+
+

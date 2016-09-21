@@ -1,66 +1,79 @@
 import hashlib, logging
-from flask import Flask, request, render_template, flash, redirect, url_for, session
+from flask import Flask, request, render_template, flash, redirect, url_for, session, jsonify, get_flashed_messages
 from google.appengine.ext import ndb
 app = Flask(__name__)
 app.secret_key = 'UfHeANzSknQ4Nv7aTpOR'
-# XXX add SL
-# XXX refactor
-# XXX add comments throughout
+
+# XXX refactor and add comments throughout
+# XXX move end values to decoration?
+# XXX what if all my saved passwords are bad?
 # XXX lint
 # XXX security
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
+  if request.method == 'GET':
+    return render_template('register.html')
   if request.method == 'POST': 
-    # is username taken?
+    success = False
     if not request.form.get('username'):
       # note that the MultiDict that flask uses in request.form could have multiple values for the asme key.  we get just the first one.
       # here we prevent issues by only having one on the client-side, and noting that potenitally mialicious mlformed requests could include multiple values
       flash('no username provided')
-      return render_template('register.html')
-    if get_user(request.form.get('username')):
-      flash('username already taken')
-      return render_template('register.html')
     else:
-      if request.form.get('password') != request.form.get('password-confirm'):
-        flash('passwords do not match')
-        return
-      user = User()
-      setattr(user, 'username', request.form.get('username'))
-      setattr(user, 'password', hashlib.sha512((request.form.get('password'))).hexdigest())
-      setattr(user, 'email', request.form.get('email'))
-      user.key = ndb.Key(User, user.username)
-      user.put()
-      flash('succesfully registered')
-      return render_template('subscribe.html')
-  else:
-    return render_template('register.html')
+      if get_user(request.form.get('username')):
+        # is username taken?
+        flash('username already taken')
+      else:
+        if request.form.get('password') != request.form.get('password-confirm'):
+          flash('passwords do not match')
+        else: 
+          user = User()
+          setattr(user, 'username', request.form.get('username'))
+          setattr(user, 'password', hashlib.sha512((request.form.get('password'))).hexdigest())
+          setattr(user, 'email', request.form.get('email'))
+          user.key = ndb.Key(User, user.username)
+          user.put()
+          success = True
+    if request.args['type'] == 'json':
+      return jsonify({'success': success, 'messages': get_flashed_messages()})
+    else:
+      if success:
+        flash('succesfully registered')
+        return render_template('subscribe.html', successful_register=1)
+      else: 
+        return render_template('register.html')
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-  returnto = request.values.get('returnto') or 'index'
+  if request.method == 'GET':
+    returnto = request.values.get('returnto') or 'index'
+    return render_template('login.html', returnto=returnto)
   if request.method == 'POST': 
-    if request.form.get('username'):
-      logging.warn( request.form.get('username') )
+    success = False
+    if not request.form.get('username'):
+      flash('username required')
+    else:
       user = get_user(request.form.get('username'))
       if not user:
         flash('user does not exist')
-        return render_template('login.html')
-      if not request.form.get('password'):
-        flash('password required')
-        return render_template('login.html')
+      else: 
+        if not request.form.get('password'):
+          flash('password required')
+        else:
+          if hashlib.sha512((request.form.get('password'))).hexdigest() == user.password:
+            session['username'] = user.username
+            success = True;
+          else:
+            flash('Unable to login')
+    if request.args['type'] == 'json':
+      return jsonify({'success': success, 'messages': get_flashed_messages()})
     else:
-        flash('username required')
-        return render_template('login.html')
-    if hashlib.sha512((request.form.get('password'))).hexdigest() == user.password:
-      flash('successfully logged-in')
-      session['username'] = user.username
-      return redirect(url_for(returnto)) 
-    else:
-      flash('Unable to login')
-      return render_template('login.html')
-  else:
-    return render_template('login.html', returnto=returnto)
+      if success:
+        flash('successfully logged-in')
+        return redirect(url_for(returnto)) 
+      else: 
+        return render_template('login.html', returnto=returnto)
 
 @app.route('/subscribe', methods=['POST', 'GET'])
 def subscribe():
@@ -116,7 +129,7 @@ def subscribe():
 def logout():
   # delete the session
   session.clear()
-  return redirect(url_for("index"))
+  return render_template('index.html', clear_session=True);
 
 @app.route('/')
 def index():
