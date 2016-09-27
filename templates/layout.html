@@ -67,7 +67,7 @@
                 var messageContainer = document.getElementById('messages');
                 json.messages.map(function(message) {
                   var msg = document.createElement('div');
-                  msg.class = 'flash';
+                  msg.className = 'flash';
                   msg.innerHTML = message;
                   messageContainer.appendChild(msg);
                 });
