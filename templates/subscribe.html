@@ -44,7 +44,7 @@
       <div><label for="shipping-phone">Phone Number</label> <input type="tel" name="shipping-tel" autocomplete="shipping tel" placeholder="212-555-1212"></input></div>
     <button id="registerButton" type="submit" value="Submit">Register!</button>
   </form>
-  <script src="{{ url_for('static', 'subscribe.js') }}" async></script>
+  <script src="{{ url_for('static', filename='subscribe.js') }}" async></script>
 </div>
 {% endif %}
 {% endblock %}

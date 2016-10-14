@@ -6,7 +6,6 @@ app.secret_key = 'UfHeANzSknQ4Nv7aTpOR'
 
 # XXX refactor and add comments throughout
 # XXX move end values to decoration?
-# XXX what if all my saved passwords are bad?
 # XXX lint
 # XXX security
 
@@ -34,8 +33,9 @@ def register():
           setattr(user, 'email', request.form.get('email'))
           user.key = ndb.Key(User, user.username)
           user.put()
+          session['username'] = user.username # XXX Set-Cookie doesn't seem to be working here
           success = True
-    if request.args['type'] == 'json':
+    if request.args.get('type') == 'json':
       return jsonify({'success': success, 'messages': get_flashed_messages()})
     else:
       if success:
@@ -46,8 +46,8 @@ def register():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+  returnto = request.values.get('returnto') or 'index'
   if request.method == 'GET':
-    returnto = request.values.get('returnto') or 'index'
     return render_template('login.html', returnto=returnto)
   if request.method == 'POST': 
     success = False
@@ -66,7 +66,7 @@ def login():
             success = True;
           else:
             flash('Unable to login')
-    if request.args['type'] == 'json':
+    if request.args.get('type') == 'json':
       return jsonify({'success': success, 'messages': get_flashed_messages()})
     else:
       if success:

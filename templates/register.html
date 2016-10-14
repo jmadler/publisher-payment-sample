@@ -11,14 +11,6 @@
     <button id="registerButton" type="submit" value="Submit">Register!</button>
   </form>
 </div>
-<!-- XXX If we've got navigator.credentials, we can bypass the form and store the result --> 
-<script>
-if (navigator.credentials) {
-  var registerForm = document.getElementById('registerForm');
-  var credentials = new PasswordCredential(registerForm);
-  navigator.credentials.store(credentials);
-}
-</script>
 {% else %}
 <p>No need to register!  You're already logged in as {{ session.username }}</p>
 <div>

@@ -8,14 +8,6 @@
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-{% if clear_session %}
-<!-- let's avoid auto-userlogin if they've logged out -->
-<script>
-  if (navigator.credentials) {
-    navigator.credentials.requireUserMediation();
-  }
-</script>
-{% endif %}
 <div class="page">
   <div id="toolbar">
     {% if session.username %}
@@ -24,10 +16,9 @@
       {% else %}
         <span><a href="/subscribe">Subscribe</a></span>
       {% endif %}
-      <span><a href="/logout">Logout</a></span>
+      <button id="logoutButton">Logout</button>
     {% else %}
-      <button id="loginButton">Login</button>
-      <script src="{{ url_for('static', filename='login.js') }}" async></script>
+      <button id="loginButton" _toggle="loginDialogBackground">Login</button>
       <div class="modalBackground" id="loginDialogBackground">
         <div class="modalForeground" id="loginDialogForeground">
           <form method="POST" action="/login" id="loginForm">
@@ -37,9 +28,21 @@
           </form>
         </div>
       </div>
-      <a href="/register">Register</a>
+      <button id="registerButton" _toggle="registerDialogBackground">Register</button>
+      <div class="modalBackground" id="registerDialogBackground">
+        <div class="modalForeground" id="registerDialogForeground">
+          <form method="POST" action="/register" id="registerForm">
+            <h2>Account Information</h2>
+              <div><label for="email">Email Address</label> <input type="email" name="email" autocomplete="email" required></input></div>
+              <div><label for="username">Username</label> <input type="text" name="username" autocomplete="username" required></input></div>
+              <div><label for="password">Password</label> <input type="password" name="password" autocomplete="new-password" required></input></div>
+              <div><label for="password-confirm">Confirm Password</label> <input type="password" name="password-confirm" autocomplete="new-password" required></input></div>
+            <input type="submit" value="Register!" />
+          </form>
+        </div>
+      </div>
     {% endif %}
-    </div>
+    <script src="{{ url_for('static', filename='login.js') }}" async></script>
   </div>
   <div id="messages">
     {% for message in get_flashed_messages() %}
