@@ -1,0 +1,30 @@
+  <form method="POST" action="?" id="subscribeForm">
+    <input type="hidden" name="form" value="subscribeForm" />
+
+    <h2>Payment Card Information</h2>
+
+      <div><label for="billing-name">Name</label> <input type="text" name="billing-name" autocomplete="billing cc-name" required placeholder="John Doe"></input></div>
+      <div><label for="billing-cardnumber">Credit Card Number</label> <input type="number" name="billing-cardnumnber" autocomplete="billing cc-number" required placeholder="4111111111111111" pattern="^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$"></input></div>
+      <div><label for="billing-csc">Card Security Code</label> <input type="number" name="billing-csc" autocomplete="billing cc-csc" required placeholder="111" pattern="^[0-9]{5}$"></input></div>
+      <div><label for="billing-exp">Expiry Month/Year</label> <input type="month" name="billing-exp" autocomplete="billing cc-exp" required placeholder="2001-01"></input></div>
+
+    <h2>Billing Address</h2>
+      <div><label for="billing-addr1">Street Address (Line 1)</label> <input type="text" name="billing-addr1" autocomplete="billing address-line1" required placeholder="111 8th Ave"></input></div>
+      <div><label for="billing-addr2">Street Address (Line 2)</label> <input type="text" name="billing-addr2" autocomplete="billing address-line2"></input></div>
+      <div><label for="billing-city">City</label> <input type="text" name="billing-city" autocomplete="billing address-level2" required placeholder="New York"></input></div>
+      <div><label for="billing-state">State</label> <input type="text" name="billing-state" autocomplete="billing address-level1" required placeholder="NY" maxlength="2" minlength="2" pattern="^[A-Z]{2}$"></input></div>
+      <div><label for="billing-zip">Zip Code</label> <input type="text" name="billing-zip" autocomplete="billing postal-code" required placeholder="10001" maxlength="5" pattern="^[0-9]{5}$"></input></div>
+      <div><label for="billing-phone">Phone Number</label> <input type="tel" name="billing-tel" autocomplete="billing tel" placeholder="212-555-1212"></input></div>
+
+    <h2>Print Edition Shipping Address</h2>
+
+      <div><label for="shipping-name">Name</label> <input type="text" name="shipping-name" autocomplete="shipping cc-name" required placeholder="John Doe"></input></div>
+      <div><label for="shipping-addr1">Street Address (Line 1)</label> <input type="text" name="shipping-addr1" autocomplete="shipping address-line1" required placeholder="111 8th Ave"></input></div>
+      <div><label for="shipping-addr2">Street Address (Line 2)</label> <input type="text" name="shipping-addr2" autocomplete="shipping address-line2"></input></div>
+      <div><label for="shipping-city">City</label> <input type="text" name="shipping-city" autocomplete="shipping address-level2" required placeholder="New York"></input></div>
+      <div><label for="shipping-state">State</label> <input type="text" name="shipping-state" autocomplete="shipping address-level1" required placeholder="NY" maxlength="2" minlength="2" pattern="^[A-Z]{2}$"></input></div>
+      <div><label for="shipping-zip">Zip Code</label> <input type="text" name="shipping-zip" autocomplete="shipping postal-code" required placeholder="10001" maxlength="5" pattern="^[0-9]{5}$"></input></div>
+      <div><label for="shipping-phone">Phone Number</label> <input type="tel" name="shipping-tel" autocomplete="shipping tel" placeholder="212-555-1212"></input></div>
+    <input type="submit" value="Submit">Subscribe!</button>
+  </form>
+  <script src="{{ url_for('static', filename='subscribe.js') }}" async></script>

@@ -14,7 +14,12 @@
       <span>Logged in as {{ session.username }}</span>
       {% if session.is_subscribed %}
       {% else %}
-        <span><a href="/subscribe">Subscribe</a></span>
+        <button id="subscribeButton" _toggle="subscribeDialogBackground">Subscribe</button>
+        <div class="modalBackground" id="subscribeDialogBackground">
+          <div class="modalForeground" id="subscribeDialogForeground">
+            {% include "subscribeForm.html" %}
+          </div>
+        </div>
       {% endif %}
       <button id="logoutButton">Logout</button>
     {% else %}

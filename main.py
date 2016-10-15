@@ -5,6 +5,7 @@ app = Flask(__name__)
 app.secret_key = 'UfHeANzSknQ4Nv7aTpOR'
 
 # XXX refactor and add comments throughout
+  # move HTML forms into indviidual pages that can be rendered or embedded via fetch
 # XXX move end values to decoration?
 # XXX lint
 # XXX security
